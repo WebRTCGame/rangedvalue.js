@@ -5,6 +5,7 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Game Timer Demo</title>
 
+<<<<<<< HEAD
 
 
     <style type='text/css'>
@@ -20,3 +21,172 @@
 </body>
 
 </html>
+=======
+    <script type='text/javascript' src='./rangedvalue.js'></script>
+
+
+    <style type='text/css'>
+        #fun {
+            border-style: solid;
+            border-width: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="fun" height="400px" width="600px"></canvas>
+
+
+    <script type="text/javascript">
+        var c = document.getElementById("fun");
+        c.width = 600;
+        c.height = 400;
+
+        var ctx = c.getContext("2d");
+        ctx.imageSmoothingEnabled = false;
+        ctx.font = "20px Georgia";
+        ctx.fillStyle = 'rgba(0,0,0,1)';
+
+        var tC = {
+            lastframe: 0,
+            fpstime: 0,
+            framecount: 0,
+            fps: 0
+        };
+        tC.updateFps = function(dt) {
+            if (this.fpstime > 0.25) {
+                this.fps = Math.round(this.framecount / this.fpstime);
+                this.fpstime = 0;
+                this.framecount = 0;
+            }
+            this.fpstime += dt;
+            this.framecount++;
+        };
+        tC.getDT = function(tframe) {
+            var dt = (tframe - this.lastframe) / 1000;
+            this.lastframe = tframe;
+            this.updateFps(dt);
+            return dt;
+        };
+        window.onload = function() {
+            var val = new range(3, 2, 10);
+            /*
+                        console.log("--------------");
+                        console.log("----Test 1----");
+                        console.log(JSON.stringify(val));
+                        console.log("--------------");
+                        console.log("----Test 2----");
+                        val.percentage = 50;
+                        console.log(JSON.stringify(val));
+                        console.log("--------------");
+                        console.log("----Test 3----");
+                        val.addPercent(-10);
+                        console.log(JSON.stringify(val));
+                        val.max += 1;
+                        val.addPercent(20).max += 1;
+                        console.log(JSON.stringify(val));
+                        console.log("--------------");
+                        console.log("----Test 4----");
+                        val.maxHitCallback = function() {
+                            console.log("**************** max hit");
+                        };
+                        val.current += 10;
+                        console.log(JSON.stringify(val));
+                        val.current -= 20;
+                        console.log(JSON.stringify(val));
+                        console.log("--------------");
+                        console.log("----Test 5----");
+                        val.current = 5;
+                        val.maxHitCallback = {};
+                        val.maxHitCallback = [];
+                        val.maxHitCallback = null;
+                        val.maxHitCallback = "one";
+                        val.maximize();
+                        console.log(JSON.stringify(val));
+                        val.shift(-4);
+                        console.log(JSON.stringify(val));
+                        console.log("--------------");
+                        console.log("----Test 6----");
+                        val.addPercent(200);
+                        console.log(JSON.stringify(val));
+                        val.addPercent(-300);
+                        console.log(JSON.stringify(val));
+            */
+            val.setValues(6, 10, 74);
+            val.percentage = 50;
+            var countUp = true;
+            val.minHitCallback = function() {
+                countUp = !countUp;
+            };
+            val.maxHitCallback = function() {
+                countUp = !countUp;
+            };
+
+
+
+
+            function update(tframe) {
+                var dt = tC.getDT(tframe);
+
+
+                if (countUp) {
+                    val.current += 2 * dt;
+                }
+                else {
+                    val.current -= 2 * dt;
+                }
+            }
+
+            function animate(tframe) {
+
+                requestAnimationFrame(animate);
+
+                /*update logic*/
+                update(tframe);
+
+                /*render game*/
+                render();
+
+            }
+
+            var toClear = true;
+
+            function render() {
+                toClear & ctx.clearRect(0, 0, c.width, c.height);
+
+
+                ctx.save();
+
+
+                ctx.save();
+                ctx.fillRect(10, 30, 400, 30);
+
+                ctx.fillStyle = 'rgba(' + (255 - val.getPercColor()) + ',' + val.getPercColor() + ',0,1)';
+
+                ctx.fillRect(14, 32, val.getCurrentInPixelsHLR(14, 392), 26);
+                ctx.restore();
+
+
+
+
+                ctx.fillText("FPS: " + tC.fps, 10, 80);
+
+                ctx.fillText("Min: " + val.min, 10, 120);
+                ctx.fillText("Val: " + val.current, 10, 140);
+                ctx.fillText("Max: " + val.max, 10, 160);
+                ctx.fillText("%: " + val.percentage, 10, 180);
+                ctx.restore();
+
+
+
+                toClear = !toClear;
+            };
+            animate(0);
+        };
+    </script>
+
+</body>
+
+
+</html>
+>>>>>>> f3b8a72de3ee5dbf3567888ba6ee7ffb95ccc65f
